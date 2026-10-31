@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Eleftherios Kathijotes — programme delivery and enterprise implementation. London.">
+<style>
+  :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<title>Eleftherios Kathijotes</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,300..600&display=swap">
+
+<style>
+/* Layout concept: a transaction moving down an authorisation stack — fixed progress rail on the left,
+   content bands that shift at different rates as the page scrolls either way. Two views: work, and about. */
+:root{
+  --paper:#ECEEF1; --surface:#F8F9FB; --ink:#131820; --muted:#5C6677;
+  --rule:#D5DAE1; --accent:#8E2F39; --accent-2:#2E5C7A; --good:#2F6B4F;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --dir:1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1015; --surface:#151A21; --ink:#E7EAEF; --muted:#8C97A8;
+    --rule:#262D37; --accent:#D4707A; --accent-2:#7FB0D2; --good:#5FA883;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1015; --surface:#151A21; --ink:#E7EAEF; --muted:#8C97A8;
+  --rule:#262D37; --accent:#D4707A; --accent-2:#7FB0D2; --good:#5FA883;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--body); font-size:17px; line-height:1.6;
+  font-optical-sizing:auto; overflow-x:clip;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--paper)}
+
+.wrap{
+  max-width:1180px; margin-inline:auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.band{position:relative}
+.band-pad{padding-block:clamp(56px,8.5vw,116px)}
+
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.03;letter-spacing:-.02em}
+h1{font-variation-settings:"wdth" 112,"wght" 760;font-size:clamp(36px,6.8vw,80px)}
+h2{font-variation-settings:"wdth" 108,"wght" 720;font-size:clamp(27px,4.2vw,50px)}
+h3{font-variation-settings:"wdth" 100,"wght" 640;font-size:clamp(18px,2vw,22px);letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow b{color:var(--accent);font-weight:500}
+.lede{font-size:clamp(17px,1.6vw,20px);line-height:1.56;color:var(--muted);max-width:62ch;font-weight:300}
+.sec-no{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--accent)}
+
+/* rail */
+.rail{position:fixed;left:0;top:0;bottom:0;width:4px;z-index:35;background:var(--rule)}
+.rail i{position:absolute;inset:0 0 auto;display:block;height:100%;background:var(--accent);transform:scaleY(0);transform-origin:top}
+
+/* topbar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:38;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.sig{font-family:var(--display);font-variation-settings:"wdth" 118,"wght" 800;font-size:15px;text-decoration:none}
+.sig span{color:var(--accent)}
+.navlinks{display:flex;gap:17px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.navlinks a{text-decoration:none}
+.navlinks a:hover,.navlinks a.on{color:var(--accent)}
+@media (max-width:720px){.navlinks{gap:13px;font-size:10px}}
+@media (max-width:460px){.navlinks a.opt{display:none}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:clamp(24px,4vw,56px);align-items:end}
+@media (max-width:880px){.hero{grid-template-columns:1fr}}
+.hero-copy{display:flex;flex-direction:column;gap:21px;min-width:0}
+.status{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:7px 14px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent-2);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-2) 18%,transparent)}
+h1 em{font-style:normal;color:var(--accent)}
+
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:4px}
+@media (max-width:700px){.facts{grid-template-columns:repeat(2,1fr)}}
+.fact{background:var(--paper);padding:15px 14px 17px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.fact b{font-family:var(--display);font-variation-settings:"wdth" 108,"wght" 760;
+  font-size:clamp(20px,2.5vw,27px);letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.fact i{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);font-style:normal;line-height:1.55}
+
+.hero-side{display:flex;flex-direction:column;gap:13px;min-width:0}
+.nowbox{border:1px solid var(--rule);background:var(--surface)}
+.nowbox .ch{padding:8px 12px;border-bottom:1px solid var(--rule);color:var(--muted);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase}
+.nowbox ul{list-style:none;margin:0;padding:14px 14px 16px;display:grid;gap:12px}
+.nowbox li{font-size:14.5px;line-height:1.5;color:var(--muted);font-weight:300;padding-left:14px;position:relative}
+.nowbox li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;background:var(--accent)}
+.nowbox b{font-family:var(--display);font-variation-settings:"wdth" 102,"wght" 650;font-size:14px;color:var(--ink);font-weight:400}
+
+
+/* marquee */
+.marq{border-block:1px solid var(--rule);background:var(--surface);overflow:hidden;padding-block:13px}
+.marq-track{display:flex;gap:34px;white-space:nowrap;width:max-content;will-change:transform}
+.marq-track span{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:34px}
+.marq-track span::after{content:"◆";color:var(--accent);font-size:7px}
+
+/* section head */
+.shead{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,3vw,44px);align-items:start;margin-bottom:clamp(28px,4vw,52px)}
+@media (max-width:700px){.shead{grid-template-columns:1fr;gap:12px}}
+.shead .right{display:flex;flex-direction:column;gap:13px;min-width:0}
+
+/* capability cards */
+.caps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.caps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.caps{grid-template-columns:1fr}}
+.cap{border:1px solid var(--rule);background:var(--surface);padding:22px 20px 24px;
+  display:flex;flex-direction:column;gap:11px;min-width:0;will-change:transform;
+  transition:border-color .3s ease,background .3s ease}
+.cap:hover{border-color:var(--accent);background:var(--paper)}
+.cap .tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.cap p{font-size:15.5px;line-height:1.55;color:var(--muted);font-weight:300}
+
+/* timeline */
+.tl{position:relative;display:grid;gap:0}
+.tl::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--rule)}
+.tl i.fill{position:absolute;left:0;top:6px;width:1px;background:var(--accent);height:0}
+.job{display:grid;grid-template-columns:158px 1fr;gap:clamp(16px,3vw,40px);
+  padding:26px 0 30px 26px;border-bottom:1px solid var(--rule);min-width:0}
+.job:last-child{border-bottom:0}
+@media (max-width:760px){.job{grid-template-columns:1fr;gap:10px}}
+.job .when{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;padding-top:5px}
+.job .when b{display:block;color:var(--accent);font-weight:500}
+.job .what{display:flex;flex-direction:column;gap:9px;min-width:0}
+.job .org{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.job .role2{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.job p{color:var(--muted);font-size:16px;font-weight:300;max-width:62ch}
+.wins{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:7px;max-width:62ch}
+.wins li{position:relative;padding-left:17px;font-size:15.5px;color:var(--muted);font-weight:300}
+.wins li::before{content:"";position:absolute;left:0;top:10px;width:6px;height:1px;background:var(--accent)}
+.wins b{color:var(--ink);font-weight:400;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--rule);padding:4px 9px;color:var(--muted)}
+.tl .node{position:absolute;left:-4px;width:9px;height:9px;background:var(--paper);border:1px solid var(--accent);border-radius:50%}
+
+/* two-up lists */
+.listy{display:grid;gap:0;border-top:1px solid var(--rule)}
+.listy > div{padding:15px 0;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.listy b{font-family:var(--display);font-variation-settings:"wdth" 102,"wght" 620;font-size:16px}
+.listy span{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.listy p{font-size:15px;color:var(--muted);font-weight:300;flex-basis:100%;max-width:58ch}
+
+/* services */
+.svc{display:grid;gap:12px}
+.svc-row{border:1px solid var(--rule);background:var(--surface);padding:clamp(20px,2.6vw,30px);
+  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,36px);align-items:start;min-width:0;
+  will-change:transform;transition:border-color .3s ease}
+.svc-row:hover{border-color:var(--accent)}
+@media (max-width:820px){.svc-row{grid-template-columns:1fr;gap:12px}}
+.svc-row .num{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em;padding-top:4px}
+.svc-row .body{display:flex;flex-direction:column;gap:9px;min-width:0}
+.svc-row p{color:var(--muted);font-size:16px;font-weight:300;max-width:60ch}
+.svc-row .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;padding-top:5px}
+@media (max-width:820px){.svc-row .meta{white-space:normal}}
+.caveat{border-left:2px solid var(--accent);padding:4px 0 4px 18px;margin-top:26px;max-width:62ch}
+.caveat p{color:var(--muted);font-size:16px;font-weight:300}
+
+/* contact */
+.contact{border:1px solid var(--rule);background:var(--surface);padding:clamp(26px,4vw,52px);display:grid;gap:20px}
+.mailrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.mail{font-family:var(--mono);font-size:clamp(14px,2.4vw,20px);user-select:all;word-break:break-all}
+.copy{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:8px 14px;cursor:pointer}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+.copy:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+footer{border-top:1px solid var(--rule)}
+footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-block:22px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* ── ABOUT view ─────────────────────────────── */
+.ab-top{display:grid;grid-template-columns:260px 1fr;gap:clamp(26px,4.5vw,60px);align-items:start}
+@media (max-width:860px){.ab-top{grid-template-columns:1fr}}
+.portrait{position:relative;aspect-ratio:4/5;max-width:260px;width:100%;border:1px solid var(--rule);
+  background:var(--surface);overflow:hidden}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.portrait::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,color-mix(in srgb,#0B0D10 70%,transparent) 0%,transparent 40%)}
+.pcap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#F2F4F7}
+.ab-copy{display:flex;flex-direction:column;gap:18px;min-width:0}
+.ab-copy p{color:var(--muted);font-weight:300;max-width:62ch}
+.ab-copy p.first{font-size:clamp(18px,1.9vw,22px);line-height:1.5;color:var(--ink);font-weight:300}
+.ab-meta{display:flex;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:4px;flex-wrap:wrap}
+.ab-meta div{background:var(--paper);padding:13px 16px;flex:1 1 150px;min-width:0;display:flex;flex-direction:column;gap:5px}
+.ab-meta b{font-family:var(--display);font-variation-settings:"wdth" 104,"wght" 650;font-size:15px}
+.ab-meta i{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-style:normal}
+.prin{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:10px;align-items:stretch}
+@media (max-width:900px){.prin{grid-template-columns:1fr}}
+.prin > div{border:1px solid var(--rule);background:var(--surface);padding:20px;min-width:0;
+  display:flex;flex-direction:column;gap:9px}
+.prin p{font-size:15.5px;color:var(--muted);font-weight:300}
+.tools{margin-top:16px;border-top:1px solid var(--rule);padding-top:24px;display:grid;gap:18px}
+.toolgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media (max-width:760px){.toolgrid{grid-template-columns:1fr;gap:18px}}
+.toolgrid section{display:grid;gap:10px;align-content:start;min-width:0}
+.toolgrid h4{margin:0;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);font-weight:500}
+.prin h3{margin-bottom:9px}
+.prin p{font-size:15.5px;color:var(--muted);font-weight:300}
+
+/* motion */
+.rv{transition:transform .78s cubic-bezier(.16,1,.3,1),opacity .6s ease}
+.rv-pre{opacity:0;transform:translateY(calc(34px * var(--dir)))}
+.rv-pre.from-left{transform:translate3d(calc(-38px * var(--dir)),18px,0)}
+.rv-pre.from-right{transform:translate3d(calc(38px * var(--dir)),18px,0)}
+@media (prefers-reduced-motion: reduce){
+  .rv,.rv-pre{opacity:1!important;transform:none!important;transition:none}
+  .dot{animation:none}
+  .marq-track,.cap,.svc-row,.parx,.prin div{transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="rail" aria-hidden="true"><i id="railfill"></i></div>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="sig" href="#home">E. Kathijotes<span>.</span></a>
+    <nav class="navlinks">
+      <a href="#work" class="opt">Capabilities</a>
+      <a href="#track">Track record</a>
+      <a href="#ai" class="opt">AI</a>
+      <a href="#about" id="navabout">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════ HOME ══════════════ -->
+<main id="view-home">
+
+<section class="band band-pad">
+  <div class="wrap hero">
+    <div class="hero-copy">
+      <div class="status"><span class="dot"></span> Principal Implementation Engineer at Forter</div>
+      <div class="eyebrow">Strategy <b>/</b> Programmes <b>/</b> AI-enabled efficiency <b>/</b> London</div>
+      <h1>Complex programmes, taken from stalled to <em>live</em>.</h1>
+      <p class="lede">I lead technical delivery for some of Europe&rsquo;s largest retail and consumer brands. Before Forter, Coursera and Instructure. A decade of enterprise SaaS implementation, API integrations and programme management — and, outside work, the same discipline applied to buildings as a director of two leaseholder-run companies.</p>
+      <div class="facts parx" data-par="-0.03">
+        <div class="fact"><b>$7M</b><i>ACV launched at Coursera across 70+ projects</i></div>
+        <div class="fact"><b>$1.5M</b><i>Stalled revenue unlocked at Forter in 11 months</i></div>
+        <div class="fact"><b>100+</b><i>Platform implementations delivered at Instructure</i></div>
+        <div class="fact"><b>90%</b><i>Team CSAT as implementation lead</i></div>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="nowbox parx" data-par="0.05">
+        <div class="ch"><span>Currently</span></div>
+        <ul>
+          <li><b>Forter</b> — Principal Implementation Engineer, Fraud. Enterprise technical delivery.</li>
+          <li><b>Granville Square Ltd</b> — Director. Pro bono.</li>
+          <li><b>South City Court RTM</b> — Director. Pro bono.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marq" aria-hidden="true">
+  <div class="marq-track" id="marq">
+    <span>Programme governance</span><span>Critical path</span><span>RAID log</span><span>Dependency management</span>
+    <span>Executive reporting</span><span>Steering committees</span><span>Project recovery</span>
+    <span>Statements of work</span><span>Change management</span><span>Benefits realisation</span>
+    <span>API integrations</span><span>3-D Secure</span><span>PSD2</span><span>Go-live</span>
+    <span>AI-assisted workflows</span><span>Tender &amp; appoint</span>
+  </div>
+</div>
+
+<!-- CAPABILITIES -->
+<section class="band band-pad" id="work">
+  <div class="wrap">
+    <div class="shead rv">
+      <div class="sec-no">01 / Capabilities</div>
+      <div class="right">
+        <h2>Delivery first, domain depth behind it</h2>
+        <p class="lede">The discipline holds whether the programme is an API integration or a roof. These are the six parts of it I own.</p>
+      </div>
+    </div>
+    <div class="caps">
+      <article class="cap rv parx" data-par="0.05">
+        <div class="tag">Programme management</div>
+        <h3>Planning &amp; critical path</h3>
+        <p>Scope, sequence, dependencies and the handful of things that actually determine the date. Risks tracked where people can see them, decisions recorded when they are made rather than reconstructed afterwards. PMP-trained.</p>
+      </article>
+      <article class="cap rv parx" data-par="-0.03">
+        <div class="tag">Technical</div>
+        <h3>Enterprise API integrations</h3>
+        <p>API orchestration, mobile SDKs, JavaScript tagging, REST integrations and SSO. I can read the integration myself, which shortens most conversations with engineering considerably.</p>
+      </article>
+      <article class="cap rv parx" data-par="0.07">
+        <div class="tag">Professional services</div>
+        <h3>Client delivery at scale</h3>
+        <p>Scoping, statements of work, onboarding against an SLA, governance cadence and handover. I have built the methodology as well as run it — including automating scaled deployments from twenty minutes to under ten seconds.</p>
+      </article>
+      <article class="cap rv parx" data-par="-0.045">
+        <div class="tag">Communication</div>
+        <h3>Executive reporting</h3>
+        <p>Presenting to C-level and steering committees is a routine part of the job: the position, the decision being asked for, and the consequence of not taking it. No padding, and no surprises arriving late.</p>
+      </article>
+      <article class="cap rv parx" data-par="0.04">
+        <div class="tag">Recovery</div>
+        <h3>Stalled programmes</h3>
+        <p>The work I am most often handed: a project that has been open for a year, where nobody agrees what is in scope and nobody wants to say so. Unpicking that is a specific skill and I have a record of it.</p>
+      </article>
+      <article class="cap rv parx" data-par="-0.055">
+        <div class="tag">Property</div>
+        <h3>Building works &amp; governance</h3>
+        <p>Specifying works, Section 20 consultation, tendering, appointing and holding managing agents to account, and reporting to a board of leaseholders who are spending their own money.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- TRACK RECORD -->
+<section class="band band-pad" id="track">
+  <div class="wrap">
+    <div class="shead rv">
+      <div class="sec-no">02 / Track record</div>
+      <div class="right">
+        <h2>Where I have done it</h2>
+        <p class="lede">Most recent first.</p>
+      </div>
+    </div>
+
+    <div class="tl" id="tl">
+      <i class="fill" id="tlfill"></i>
+
+      <div class="job rv">
+        <span class="node" style="top:32px"></span>
+        <div class="when"><b>Nov 2023 →</b>Present</div>
+        <div class="what">
+          <h3>Principal Implementation Engineer, Fraud</h3>
+          <div class="org">Forter · London</div>
+          <p>Technical delivery for the highest-value EMEA accounts on the book — a global sportswear brand, an international fashion retailer and a luxury eyewear group among them. Multi-product onboarding across fraud, abuse prevention, identity protection and payment optimisation, covering API orchestration, mobile SDKs and JavaScript tagging, with go-live coordination across sales, analytics and customer success. Acting as the primary implementation contact for strategic accounts, working with product, engineering, payments and analytics to scope solutions and close technical gaps.</p>
+          <ul class="wins">
+            <li>Revived multi-year stalled projects, unlocking <b>$1.5M</b> of revenue inside eleven months.</li>
+            <li>Recognised as <b>Q3 2024 Top Performer</b> for EMEA.</li>
+            <li>Drove the go-live of a long-stalled PSD2 programme, and delivered a 3-D Secure integration for the Japanese market.</li>
+            <li>Standardised kickoff materials and onboarding templates, and mentored new joiners across implementation, sales and customer success.</li>
+          </ul>
+          <div class="chips"><span class="chip">3DS / SCA</span><span class="chip">PSD2</span><span class="chip">API &amp; SDK</span><span class="chip">Escalations</span><span class="chip">Go-live</span></div>
+        </div>
+      </div>
+
+      <div class="job rv">
+        <span class="node" style="top:32px"></span>
+        <div class="when"><b>Concurrent</b>Voluntary</div>
+        <div class="what">
+          <h3>Director — voluntary appointment</h3>
+          <div class="org">Granville Square Ltd &amp; South City Court RTM</div>
+          <p>Two separate leaseholder-run companies. A Right to Manage company takes management of a building out of the freeholder's hands and puts it with the leaseholders, which makes the board — not a landlord — responsible for repairs, maintenance, insurance, safety compliance and the service charge, whether or not a managing agent is appointed.</p>
+          <p>My contribution sits on the client side of that: scrutiny of expenditure and service charge budgets, coordination between residents, agents and contractors, oversight of building works and improvement projects, and the governance that sits around both. Decisions and outcomes are the board's collectively. Unpaid.</p>
+          <div class="chips"><span class="chip">Governance</span><span class="chip">Expenditure scrutiny</span><span class="chip">Works oversight</span><span class="chip">Stakeholder coordination</span></div>
+        </div>
+      </div>
+
+      <div class="job rv">
+        <span class="node" style="top:32px"></span>
+        <div class="when"><b>Apr – Sep 2023</b>Clari</div>
+        <div class="what">
+          <h3>Solutions Consultant, Professional Services</h3>
+          <div class="org">Clari · London</div>
+          <p>Revenue platform implementations, translating complex customer requirements into platform configurations and working directly with senior revenue operations stakeholders on rollout and value realisation. Scoping centred on forecasting accuracy, pipeline visibility and integration readiness, with product feedback fed back from what the implementations exposed.</p>
+          <div class="chips"><span class="chip">Revenue operations</span><span class="chip">Solution design</span><span class="chip">Scoping</span></div>
+        </div>
+      </div>
+
+      <div class="job rv">
+        <span class="node" style="top:32px"></span>
+        <div class="when"><b>Aug 2020 – Nov 2022</b>Coursera</div>
+        <div class="what">
+          <h3>Senior Implementation Manager, EMEA</h3>
+          <div class="org">Coursera · London</div>
+          <p>Owned delivery of Coursera Enterprise to new customers — technical implementation, SSO and LMS integration, change management and deployment to the customer's own users. Built custom learning programmes against real business problems, and supported sales with demos and technical discovery.</p>
+          <ul class="wins">
+            <li><b>$7M ACV</b> launched across <b>70+</b> projects, for clients including a global technology company, a multinational telecoms operator and a major pharmaceutical group.</li>
+            <li>Architected the methodology for scaled accounts, cutting deployment from <b>20 minutes to under 10 seconds</b>.</li>
+            <li>Applied lean methods to raise delivery efficiency <b>15%</b>, standardising the framework used by 20+ colleagues.</li>
+          </ul>
+          <div class="chips"><span class="chip">SSO / LMS</span><span class="chip">Automation</span><span class="chip">Change management</span><span class="chip">Lean</span></div>
+        </div>
+      </div>
+
+      <div class="job rv">
+        <span class="node" style="top:32px"></span>
+        <div class="when"><b>Mar 2017 – Jul 2020</b>Instructure</div>
+        <div class="what">
+          <h3>Team Lead, Implementation Consulting (EMEA)</h3>
+          <div class="role2">Previously Implementation Consultant · Mar 2017 – Nov 2018</div>
+          <div class="org">Instructure · London</div>
+          <p>Led a team of four implementation consultants, reporting to the Head of Customer Success — resource planning against the sales pipeline, escalation point for the region, and professional development across the team. Before that, delivering Canvas implementations against a contractual 90-day SLA and advising customers on building against the REST API.</p>
+          <ul class="wins">
+            <li>Programme manager for the largest European accounts — <b>leading universities and business schools</b> in the UK, Switzerland and Sweden.</li>
+            <li><b>100+</b> implementations delivered inside the 90-day SLA.</li>
+            <li>Raised team CSAT to <b>90%</b> after promotion to Team Lead.</li>
+          </ul>
+          <div class="chips"><span class="chip">Team leadership</span><span class="chip">REST API</span><span class="chip">SLA delivery</span><span class="chip">Escalations</span></div>
+        </div>
+      </div>
+
+      <div class="job rv">
+        <span class="node" style="top:32px"></span>
+        <div class="when"><b>2013 – 2017</b>Earlier</div>
+        <div class="what">
+          <h3>Education technology</h3>
+          <div class="org">London Business School · Hult International Business School</div>
+          <p>Education Technology Systems Manager at London Business School, implementing Canvas for the Degree Education department and supporting the school's wider platform ecosystem. Before that, Application Specialist and Technology Coordinator at Hult, running the global rollout of course evaluation software across the London and San Francisco campuses and training faculty on classroom technology.</p>
+          <div class="chips"><span class="chip">Systems management</span><span class="chip">Rollout</span><span class="chip">Training</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI & EFFICIENCY -->
+<section class="band band-pad" id="ai">
+  <div class="wrap">
+    <div class="shead rv">
+      <div class="sec-no">03 / Where I am heading</div>
+      <div class="right">
+        <h2>AI-enabled efficiency</h2>
+        <p class="lede">An advisory focus rather than a track record, and worth being plain about the difference. The automation work behind me was conventional engineering, not AI. What interests me now is the same problem — how teams plan, coordinate and deliver — approached with tools that did not exist when I built the last version.</p>
+      </div>
+    </div>
+    <div class="caps">
+      <article class="cap rv parx" data-par="0.04">
+        <div class="tag">Delivery</div>
+        <h3>AI-augmented programme work</h3>
+        <p>Reporting, meeting synthesis, knowledge retrieval and stakeholder communication, with human review inside the workflow rather than bolted on after it.</p>
+      </article>
+      <article class="cap rv parx" data-par="-0.035">
+        <div class="tag">Workflow</div>
+        <h3>Agentic workflows, bounded</h3>
+        <p>Multi-step workflows that connect information and routine actions, with defined permissions, escalation points and an accountable owner. The boundaries are the interesting part.</p>
+      </article>
+      <article class="cap rv parx" data-par="0.05">
+        <div class="tag">Operations</div>
+        <h3>Measured adoption</h3>
+        <p>Map the friction, prioritise by value and data readiness, run one focused pilot, then measure cycle time and rework before expanding. Most AI programmes fail at the fourth step.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- BACKGROUND -->
+<section class="band band-pad">
+  <div class="wrap">
+    <div class="shead rv">
+      <div class="sec-no">04 / Background</div>
+      <div class="right">
+        <h2>Training</h2>
+        <p class="lede">A computer science degree, a management master's, and the project management qualification that put a vocabulary around what I was already doing.</p>
+      </div>
+    </div>
+    <div class="listy rv">
+      <div><b>Project Management Professional (PMP) Bootcamp</b><span>The Knowledge Academy · 2019</span></div>
+      <div><b>MSc Management (Innovation &amp; Technology)</b><span>University College London · 2010–11</span></div>
+      <div><b>BSc (Hons) Computer Science</b><span>Kingston University London · 2007–10</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONTACT -->
+<section class="band band-pad" id="contact">
+  <div class="wrap">
+    <div class="contact rv">
+      <div class="sec-no">05 / Contact</div>
+      <h2>Worth a conversation?</h2>
+      <p class="lede">Send a short note with the problem and the timeline. I will tell you if I am the right person, and if I am not, usually who is.</p>
+      <div class="mailrow">
+        <span class="mail" id="mail">hello@ekathijotes.com</span>
+        <button class="copy" id="copybtn" type="button">Copy address</button>
+      </div>
+      <div class="eyebrow">London <b>/</b> GMT <b>/</b> English &amp; Greek <b>/</b> Remote or on-site in the UK
+        <b>/</b> <a href="https://www.linkedin.com/in/ekathijotes">LinkedIn</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ══════════════ ABOUT ══════════════ -->
+<main id="view-about" hidden>
+<section class="band band-pad">
+  <div class="wrap">
+    <div class="ab-top">
+      <div class="portrait rv from-left parx" data-par="0.04">
+        <img src="portrait.jpg" width="1000" height="1250" alt="Eleftherios Kathijotes">
+        <span class="pcap">Eleftherios Kathijotes · London</span>
+      </div>
+      <div class="ab-copy rv from-right">
+        <div class="sec-no">About</div>
+        <h2>Eleftherios Kathijotes</h2>
+        <p class="first">Principal Implementation Engineer at Forter, based in London. A career spanning enterprise SaaS, digital commerce, revenue operations and education technology — and, underneath all of it, the same job: connecting how systems actually work with what an organisation needs them to do.</p>
+        <p>A computer science foundation at Kingston, postgraduate study in management, innovation and technology at UCL, and no intention since of choosing between the two. The combination is the point. I can read the integration myself and still be the person holding the plan, which removes a translation layer that slows most enterprise programmes down.</p>
+        <p>The path ran through education technology first — Hult, then London Business School, then Instructure, implementing learning platforms for universities across Europe — before enterprise SaaS at Coursera and, now, payments and fraud at Forter. What stayed constant was the shape of the work: an enterprise customer, a technical integration, several teams who do not report to each other, and a date.</p>
+        <p>Most programmes I inherit are not failing on technology. They are failing because nobody has written down what is in scope, who decides, and what happens on the day it goes wrong. That is a systems problem before it is a software one, and it is the part I am good at.</p>
+        <p>Outside work I hold voluntary director appointments at two leaseholder-run companies in south London, where the same job arrives wearing a hard hat — expenditure scrutiny, works oversight, holding a managing agent to account, and explaining to residents why something costs what it costs. Unpaid, occasionally thankless, and the best governance training I have had.</p>
+        <div class="ab-meta">
+          <div><b>English, Greek</b><i>Languages</i></div>
+          <div><b>London</b><i>Based</i></div>
+          <div><b>Cypriot</b><i>Nationality</i></div>
+        </div>
+
+        <div class="prin rv">
+          <div>
+            <h3>Write it down</h3>
+            <p>A decision that exists only in someone's memory of a call is not a decision. Scope, owners and dates go in writing, where people can disagree with them early.</p>
+          </div>
+          <div>
+            <h3>Amber early, not red late</h3>
+            <p>I would rather tell you a date is slipping in week two than defend it in week nine. A status report that is always green is not a status report.</p>
+          </div>
+          <div>
+            <h3>Go and read it</h3>
+            <p>The answer is usually in the payload, the lease or the contract. I will go and look rather than relay the question to someone else and wait.</p>
+          </div>
+        </div>
+
+        <div class="tools rv">
+          <div class="sec-no">Technical stack</div>
+          <div class="toolgrid">
+            <section>
+              <h4>Integration &amp; APIs</h4>
+              <div class="chips">
+                <span class="chip">REST APIs</span><span class="chip">API orchestration</span>
+                <span class="chip">Postman</span><span class="chip">Mobile SDKs</span>
+                <span class="chip">JavaScript tagging</span><span class="chip">SSO / SAML</span>
+              </div>
+            </section>
+            <section>
+              <h4>Build &amp; data</h4>
+              <div class="chips">
+                <span class="chip">JavaScript</span><span class="chip">HTML / CSS</span>
+                <span class="chip">Retool</span><span class="chip">Looker</span>
+              </div>
+            </section>
+            <section>
+              <h4>Delivery platforms</h4>
+              <div class="chips">
+                <span class="chip">Jira</span><span class="chip">Asana</span>
+                <span class="chip">Salesforce</span><span class="chip">Gainsight</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Eleftherios Kathijotes</span>
+    <span>Programme delivery · payments, fraud &amp; property</span>
+    <span>London</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root   = document.documentElement;
+  var home   = document.getElementById('view-home');
+  var about  = document.getElementById('view-about');
+  var railf  = document.getElementById('railfill');
+  var marq   = document.getElementById('marq');
+  var tl     = document.getElementById('tl');
+  var tlfill = document.getElementById('tlfill');
+
+  /* ---- reveal ---- */
+  var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) e.target.classList.remove('rv-pre'); });
+  }, {rootMargin:'0px 0px -8% 0px', threshold:0.08}) : null;
+
+  function arm(scope){
+    var els = [].slice.call(scope.querySelectorAll('.rv'));
+    els.forEach(function(el){
+      if(reduce || !io){ el.classList.remove('rv-pre'); return; }
+      if(el.getBoundingClientRect().top > window.innerHeight * 0.92) el.classList.add('rv-pre');
+      else el.classList.remove('rv-pre');
+      io.observe(el);
+    });
+  }
+
+  /* ---- routing: #about is a separate view, everything else is a section of home ---- */
+  var parx = [];
+  function route(){
+    var h = (location.hash || '').replace('#','');
+    var showAbout = (h === 'about');
+    about.hidden = !showAbout;
+    home.hidden  = showAbout;
+
+    document.getElementById('navabout').classList.toggle('on', showAbout);
+    var scope = showAbout ? about : home;
+    parx = [].slice.call(scope.querySelectorAll('.parx'));
+    parx.forEach(function(el){ el.style.transform = ''; });
+    arm(scope);
+
+    if(showAbout || h === '' || h === 'home'){
+      window.scrollTo(0,0);
+    } else {
+      var target = document.getElementById(h);
+      if(target) target.scrollIntoView();
+    }
+    tick();
+  }
+  addEventListener('hashchange', route);
+
+  /* ---- scroll engine ---- */
+  var lastY = window.pageYOffset || 0, marqOff = 0, lastT = 0, running = false;
+
+  function frame(t){
+    running = false;
+    var y  = window.pageYOffset || 0;
+    var dt = lastT ? Math.min(t - lastT, 50) : 16;
+    lastT = t;
+    var dy = y - lastY;
+    if(Math.abs(dy) > 0.5) root.style.setProperty('--dir', dy > 0 ? '1' : '-1');
+    lastY = y;
+
+    var max = Math.max(1, document.body.scrollHeight - window.innerHeight);
+    if(railf) railf.style.transform = 'scaleY(' + Math.min(1, y / max) + ')';
+    if(reduce) return;
+
+    var vh = window.innerHeight;
+    for(var i = 0; i < parx.length; i++){
+      var el = parx[i], r = el.getBoundingClientRect();
+      if(r.bottom < -220 || r.top > vh + 220) continue;
+      var centre = r.top + r.height / 2 - vh / 2;
+      var rate = parseFloat(el.getAttribute('data-par')) || 0;
+      el.style.transform = 'translate3d(0,' + (centre * rate).toFixed(2) + 'px,0)';
+    }
+
+    if(marq && !home.hidden){
+      marqOff -= dt * 0.022 + dy * 0.45;
+      var w = marq.scrollWidth / 2 || 1;
+      if(marqOff <= -w) marqOff += w;
+      if(marqOff > 0)  marqOff -= w;
+      marq.style.transform = 'translate3d(' + marqOff.toFixed(2) + 'px,0,0)';
+    }
+
+    if(tl && tlfill && !home.hidden){
+      var tr = tl.getBoundingClientRect();
+      var p  = (vh * 0.75 - tr.top) / Math.max(1, tr.height);
+      tlfill.style.height = (Math.max(0, Math.min(1, p)) * 100) + '%';
+    }
+  }
+  function tick(){ if(!running){ running = true; requestAnimationFrame(frame); } }
+  addEventListener('scroll', tick, {passive:true});
+  addEventListener('resize', tick);
+
+  if(marq && !reduce) marq.innerHTML += marq.innerHTML;
+  route();
+
+
+  /* ---- copy address ---- */
+  var btn = document.getElementById('copybtn'), mail = document.getElementById('mail');
+  if(btn && mail){
+    btn.addEventListener('click', function(){
+      var txt = mail.textContent.trim();
+      function done(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy address'; }, 1800); }
+      function select(){
+        try{
+          var r = document.createRange(); r.selectNodeContents(mail);
+          var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        }catch(e){}
+        btn.textContent = 'Press ⌘/Ctrl+C';
+        setTimeout(function(){ btn.textContent = 'Copy address'; }, 2600);
+      }
+      try{ navigator.clipboard.writeText(txt).then(done, select); }
+      catch(e){ select(); }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
